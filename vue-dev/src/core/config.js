@@ -44,6 +44,7 @@ export default ({
 
   /**
    * Whether to suppress warnings.
+   * NOTE:是否取消警告
    */
   silent: false,
 
