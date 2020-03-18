@@ -43,9 +43,11 @@ export class Observer {
     this.value = value
     this.dep = new Dep()
     this.vmCount = 0
+    //给value 的 __ob__属性上挂载自己
     def(value, '__ob__', this)
     if (Array.isArray(value)) {
-      if (hasProto) {
+      //对于数组的原生方法 设置拦截
+      if (hasProto) {//__proto__ in {}
         protoAugment(value, arrayMethods)
       } else {
         copyAugment(value, arrayMethods, arrayKeys)
@@ -118,7 +120,7 @@ export function observe(value: any, asRootData: ?boolean): Observer | void {
     shouldObserve &&
     !isServerRendering() &&
     (Array.isArray(value) || isPlainObject(value)) &&
-    Object.isExtensible(value) &&
+    Object.isExtensible(value) && //NOTE:Object.isExtensible判断这个对象是不是可扩展的
     !value._isVue
   ) {
     ob = new Observer(value)
@@ -155,13 +157,14 @@ export function defineReactive(
     val = obj[key]
   }
 
-  let childOb = !shallow && observe(val)
+  let childOb = !shallow && observe(val) //处理一下我的儿子 再返回儿子
   Object.defineProperty(obj, key, {
     enumerable: true,//可枚举
     configurable: true,
     get: function reactiveGetter() {
       const value = getter ? getter.call(obj) : val
-      if (Dep.target) {
+      if (Dep.target) { //NOTE:Dep.target 是一个 Watcher
+        //收集依赖
         dep.depend()
         if (childOb) {
           childOb.dep.depend()

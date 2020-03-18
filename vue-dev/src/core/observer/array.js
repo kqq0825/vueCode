@@ -5,6 +5,7 @@
 
 import { def } from '../util/index'
 
+//Array原型 包含数组各种方法的一个数组
 const arrayProto = Array.prototype
 export const arrayMethods = Object.create(arrayProto)
 
@@ -20,11 +21,12 @@ const methodsToPatch = [
 
 /**
  * Intercept mutating methods and emit events
+ * NOTE:拦截方法 并且发出事件
  */
 methodsToPatch.forEach(function (method) {
   // cache original method
   const original = arrayProto[method]
-  def(arrayMethods, method, function mutator (...args) {
+  def(arrayMethods, method, function mutator(...args) {
     const result = original.apply(this, args)
     const ob = this.__ob__
     let inserted
