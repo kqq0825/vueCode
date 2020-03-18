@@ -32,11 +32,12 @@ const normalizeEvent = cached((name: string): {
     passive
   }
 })
-
+//判断事件对应的方法是否是一个数组，如果是数组就遍历执行
 export function createFnInvoker (fns: Function | Array<Function>, vm: ?Component): Function {
   function invoker () {
     const fns = invoker.fns
     if (Array.isArray(fns)) {
+      //数组拷贝  返回一个新的数组
       const cloned = fns.slice()
       for (let i = 0; i < cloned.length; i++) {
         invokeWithErrorHandling(cloned[i], null, arguments, vm, `v-on handler`)

@@ -340,6 +340,7 @@ export function callHook (vm: Component, hook: string) {
   const info = `${hook} hook`
   if (handlers) {
     for (let i = 0, j = handlers.length; i < j; i++) {
+      //生命周期对应的方法执行时 错误处理
       invokeWithErrorHandling(handlers[i], vm, null, vm, info)
     }
   }
